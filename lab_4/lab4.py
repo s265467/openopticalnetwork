@@ -13,7 +13,7 @@ si = data["SI"][0]
 obj = create_input_spectral_information(si["f_min"],si["f_max"],si["roll_off"],si["baud_rate"],10**((si["power_dbm"]-30)/10),si["spacing"])
 
 #replacing value as requested
-obj1 = obj._replace(carriers=tuple(c._replace(power = c.power._replace(signal= c.power.signal + 10**0.3, nli = 5*10**(-8), ase= 10**(-7)))
+obj1 = obj._replace(carriers=tuple(c._replace(power = c.power._replace(signal= c.power.signal + 0.001, nli = 5*10**(-8), ase= 10**(-7)))
                               for c in obj.carriers))
 
 #dati plot
