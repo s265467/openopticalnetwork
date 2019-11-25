@@ -22,9 +22,16 @@ ase_,nli_ = [],[]
 
 #making list to plot
 for ogg in obj1[1]:
-	f_.append(ogg.frequency)
-	p_.append(ogg.power.signal)
-	ase_.append(ogg.power.ase)
-	nli_.append(ogg.power.nli)
+	f_.append(ogg.frequency/(10**12))
+	p_.append(10*log10(ogg.power.signal)+30)
+	ase_.append(10*log10(ogg.power.ase)+30)
+	nli_.append(10*log10(ogg.power.nli)+30)
 
+plt.ylabel("[dBm] (power of signals)")
+plt.xlabel("[THz] channels frequency")
+plt.plot(f_,p_,'o')
+plt.plot(f_,ase_,'o')
+plt.plot(f_,nli_,'o')
+
+plt.show()
 
