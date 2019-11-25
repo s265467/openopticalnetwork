@@ -15,7 +15,7 @@ x_,y_ = [],[]
 for el in test[1]:
 	x_.append(el[1]/(10**12))
 	y_.append(10*log10(el[4][0])+30)
-plt.ylabel("[dB] (power of signals)")
+plt.ylabel("[dBm] (power of signals)")
 plt.xlabel("[THz] channels frequency")
 plt.plot(x_,y_,'o')
 plt.show()
