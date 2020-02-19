@@ -1,0 +1,38 @@
+from material.utilities import *
+from gnpy.core.info import *
+import json
+import matplotlib.pyplot as plt
+from math import *
+from gnpy.core.elements import *
+#from gnpy.core.elements import Edfa
+
+#Loading EDFA parameters (Optical Amplifier)
+edfa_params = get_edfa_parameters("my_config.json","material/eqp.json")
+edfa_instance = Edfa(**edfa_params)
+
+#Instantiating WDM
+
+with open("material/eqp.json","r") as read_file:
+	data = json.load(read_file)
+
+#obtaining parameter json file
+n = {}
+for el in data["SI"][0]:
+	n[el] = data["SI"][0][el]
+
+WDM_instance = create_input_spectral_information(n["f_min"],n["f_max"], n["roll_off"], n["baud_rate"], 10**((n["power_dbm"]-30)/10),n["spacing"])
+
+#Input monitor 
+monitor1 = Transceiver(uid="receiver")
+monitor1._calc_snr(WDM_instance)
+osnr_ase  = monitor1.osnr_ase 
+
+#propagation of WDM throught EDFA
+propagated_WDM = edfa_instance.__call__(WDM_instance)
+
+# Output monitor
+monitor2 = Transceiver(uid="receiver")
+monitor2._calc_snr(propagated_WDM)
+osnr_ase  = monitor2.osnr_ase 
+
+
