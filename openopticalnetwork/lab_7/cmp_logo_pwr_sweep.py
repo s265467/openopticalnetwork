@@ -77,6 +77,15 @@ data["SI"][0].pop('tx_osnr')
 data["SI"][0].pop('sys_margins')
 data["SI"][0].pop("power_dbm")
 
+#setting power interval sweep for test
+power_interval = numpy.arange(-16.0,16.0,2)
+
+#Generating spectral information with a power sweep 
+WDM_in = []
+for power in power_interval:
+	p = 10**((power-30)/10) #dBm to W
+	WDM_in.append( create_input_spectral_information(**data["SI"][0],power=p) )
+	
 #Generating components of the line
 line = [ GenerateSysComponents() for i in range(_span_)]
 
@@ -84,22 +93,30 @@ line = [ GenerateSysComponents() for i in range(_span_)]
 snr,OI_power = LOGO(data["SI"][0], line )
 print("LOGO algorithm \n Optimal Input Power is : ",OI_power, "[dBm] and maximum SNR is :", snr, "[dB]")
 
-#Generating spectral information with a power sweep 
-p = 10**((OI_power-30)/10) #dBm to W
-WDM_in = create_input_spectral_information(**data["SI"][0],power=p)
-
-WDM_out = [WDM_in]
-#Propagating WDM throught lines
-for l in line:
-	WDM_out.append( __Propagate__( WDM_out[line.index(l)], l ) )
+#Propagating each WDM with different power
+WDM_out = []
+for wdm in WDM_in:
+	wdm_n = [ WDM_in[ WDM_in.index(wdm) ] ]
+	#propagating wdm throught lines
+	for l in line:
+		wdm_n.append( __Propagate__( wdm_n[line.index(l)], l ) )
+	WDM_out.append(wdm_n)
 
 # Monitoring propagation at the end of every span: SNR_ab
-monitor = MonitorNode(WDM_out[-1])
-print(monitor)
+monitor_n = [ MonitorNode(WDM_out[i][-1]) for i in range(len(WDM_out)) ]
+
+#computing optimal power
+#1° vector composed of SNR_ab ( InputPower )
+snr_dsp = [monitor_n[i].snr[44] for i in range(len(monitor_n))]
+#2° computing maximum SNR_ab
+max_snr = max(snr_dsp)
+#3° extracting the corresponding input power
+opt_pwr = power_interval[snr_dsp.index(max_snr)]
+
+print("Optimization by several propagation tests\n Optimal Input Power is : ",opt_pwr, "[dBm] and maximum SNR is :", max_snr, "[dB]")
+
 #Plot SNR vs Input power sweep
-plt.ylabel("[dB] GSNR[out], ASE, NL")
+plt.ylabel("[dB] SNR[out]")
 plt.xlabel("[dBm] (power sweep of signal)")
-plt.plot(OI_power, monitor.snr[44], 'b+')
-plt.plot(OI_power, monitor.osnr_ase[44], 'g+')
-plt.plot(OI_power, monitor.osnr_nli[44], 'r+')
+plt.plot(power_interval, [monitor_n[i].snr[44] for i in range(len(monitor_n))],'b')
 plt.show()

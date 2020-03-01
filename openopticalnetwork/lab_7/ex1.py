@@ -9,6 +9,8 @@ import numpy
 #Exercise 2
 _span_ = 10
 
+power_interval = numpy.arange(-5.0,2.0,0.25)
+
 def MonitorNode( node ):
 	transceiver = Transceiver(uid="receiver")
 	# refto
@@ -45,7 +47,7 @@ data["SI"][0].pop("power_dbm")
 
 #Generating spectral information with a power sweep 
 WDM_in = []
-for power in numpy.arange(-3.0,2.0,0.25):
+for power in power_interval:
 	p = 10**((power-30)/10) #dBm to W
 	WDM_in.append( create_input_spectral_information(**data["SI"][0],power=p) )
 
@@ -65,8 +67,9 @@ for wdm in WDM_in:
 monitor_n = [ MonitorNode(WDM_out[i][-1]) for i in range(len(WDM_out)) ]
 
 #Plot the results compared with power sweep
-plt.ylabel("[dBm] (SNR_{NL}, OSNR)")
+plt.ylabel("[dB] (SNR_{NL}, SNR_{ASE}, GSNR)")
 plt.xlabel("[dBm] (power sweep of signal)")
-plt.plot(numpy.arange(-3.0,2.0,0.25), [monitor_n[i].osnr_ase[22] for i in range(len(monitor_n))],'b+')
-plt.plot(numpy.arange(-3.0,2.0,0.25), [monitor_n[i].osnr_nli[22] for i in range(len(monitor_n))],'g+')
+plt.plot(power_interval, [monitor_n[i].osnr_ase[22] for i in range(len(monitor_n))],'b+')
+plt.plot(power_interval, [monitor_n[i].snr[22] for i in range(len(monitor_n))],'o')
+plt.plot(power_interval, [monitor_n[i].osnr_nli[22] for i in range(len(monitor_n))],'g+')
 plt.show()
