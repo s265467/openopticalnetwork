@@ -71,16 +71,16 @@ frequency = [ ogg.frequency/(10**12) for ogg in WDM_out_edfa[1] ]
 
 plt.figure(1)
 plt.title("Signal Power, NLI Power, ASE Power")
-plt.ylabel("[W] (power of signals), [dB] others")
+plt.ylabel("[mW] (power of signals)")
 plt.xlabel("[THz] channels frequency")
 plt.plot(frequency,wdm1_pwr,'ro',frequency,wdm1_ase,'go',frequency,wdm1_nli,'bo',\
-		frequency,wdm2_pwr,'r+',frequency,wdm2_ase,'g+',frequency,wdm2_nli,'b+',\
+		frequency,wdm2_pwr,'r',frequency,wdm2_ase,'g+',frequency,wdm2_nli,'b+',\
 		frequency,wdm3_pwr,'r*',frequency,wdm3_ase,'g*',frequency,wdm3_nli,'b*')
 plt.show()
 
 plt.figure(2)
 plt.title("GSNR, SNR_NL, OSNR Power")
-plt.ylabel("[dBm] (power of signals)")
+plt.ylabel("[dB] (power of signals)")
 plt.xlabel("[Span element]")
 plt.plot([1,2],GSNR,'*')
 plt.plot([1,2],NLI,'+')

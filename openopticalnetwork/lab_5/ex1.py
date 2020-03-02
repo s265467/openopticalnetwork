@@ -39,7 +39,7 @@ mnt1._calc_snr(WDM_in)
 mnt2 = Transceiver(uid="receiver")
 mnt2._calc_snr(WDM_out)
 
-nli_out = mnt2.osnr_nli
+nli_out = [c.power.signal/c.power.nli for c in WDM_out.carriers]#mnt2.osnr_nli
 
 #generating frequency axis
 frequency = [ ogg.frequency/(10**12) for ogg in WDM_out[1] ]

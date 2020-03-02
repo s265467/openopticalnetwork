@@ -52,6 +52,12 @@ WDM_out_edfa = edfa.__call__(WDM_out_fiber)
 PowerIn, PowerOut = WDM_out_fiber[1][44][4][0], WDM_out_edfa[1][44][4][0]
 RecoveredSignal =  10*log10(PowerOut/PowerIn)
 
+def MonitorNode( node ):
+	transceiver = Transceiver(uid="receiver")
+	# refto
+	# https://github.com/Telecominfraproject/oopt-gnpy/blob/master/gnpy/core/elements.py
+	transceiver._calc_snr(node)
+	return transceiver
 
 channel_axis = [ i for i in range(len( WDM_in[1] )) ]
 input_power_vect = [ 10*log10(WDM_in[1][i][4][0])+30 for i in range(len( WDM_in[1] )) ]
