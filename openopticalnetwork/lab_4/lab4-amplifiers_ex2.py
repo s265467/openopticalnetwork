@@ -7,7 +7,11 @@ from gnpy.core.elements import *
 #from gnpy.core.elements import Edfa
 
 #Loading EDFA parameters (Optical Amplifier)
-edfa_params = get_edfa_parameters("my_config.json","material/eqp.json")
+edfa_params = get_edfa_parameters("my_config.json","material/eqp1.json")
+edfa_params['operational']['gain_target'] = 12
+
+print(edfa_params['params']['nf_model'])
+
 edfa_instance = Edfa(**edfa_params)
 
 #Instantiating WDM

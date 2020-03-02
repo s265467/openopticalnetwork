@@ -5,7 +5,7 @@ from math import *
 from gnpy.core.elements import Transceiver
 
 #reading json file
-with open("eqp.json","r") as read_file:
+with open("material/eqp.json","r") as read_file:
 	data = json.load(read_file)
 
 #obtaining data to compute spectral information
@@ -14,7 +14,10 @@ si = data["SI"][0]
 obj = create_input_spectral_information(si["f_min"],si["f_max"],si["roll_off"],si["baud_rate"],10**((si["power_dbm"]-30)/10),si["spacing"])
 
 #replacing value as requested
-obj1 = obj._replace(carriers=tuple(c._replace(power = c.power._replace(signal= c.power.signal + 0.001, nli = 5*10**(-8), ase= 10**(-7)))
+amp_power = 10**(3/10)
+ase_power = 10**((-40-30)/10)
+nli_power = 10**((-43-40)/10)
+obj1 = obj._replace(carriers=tuple(c._replace(power = c.power._replace(signal= c.power.signal + amp_power, nli = nli_power, ase= ase_power))
                               for c in obj.carriers))
 
 #LAB 4 - EXERCISE 1
@@ -51,10 +54,10 @@ snr	  = trans.snr
 
 frequency = [ ogg.frequency/(10**12) for ogg in obj1[1] ]
 
-plt.ylabel("[dBm] (power of signals)")
+plt.ylabel("[dB] (power of signals)")
 plt.xlabel("[THz] channels frequency")
-plt.plot(frequency,osnr_ase,'o')
-plt.plot(frequency,osnr_nli,'o')
+plt.plot(frequency,osnr_ase,'*')
+plt.plot(frequency,osnr_nli,'+')
 plt.plot(frequency,snr,'o')
 plt.show()
 
