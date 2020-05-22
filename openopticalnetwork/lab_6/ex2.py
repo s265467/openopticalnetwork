@@ -61,7 +61,7 @@ snr_nl = [ monitor_n[i+1].osnr_nli[44] for i in range(_span_) ]
 
 span = [ i+1 for i in range(_span_) ]
 
-plt.ylabel("[dBm] (power of signals)")
+plt.ylabel("[dB] (power of signals)")
 plt.xlabel("Span step")
 plt.plot(span,osnr,'b')
 plt.plot(span,snr_nl,'g')

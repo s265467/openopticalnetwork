@@ -41,7 +41,7 @@ ase_pwr_out = [ c.power.ase for c in propagated_WDM.carriers ]
 frequency = [ ogg.frequency/(10**12) for ogg in WDM_instance[1] ]
 
 plt.figure(1)
-plt.ylabel("[dB] (power of ASE)")
+plt.ylabel("[W] (power of ASE)")
 plt.xlabel("[THz] channels frequency")
 plt.plot(frequency,ase_pwr_in,'*')
 plt.plot(frequency,ase_pwr_out,'+')

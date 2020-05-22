@@ -21,7 +21,7 @@ obj1 = obj._replace(carriers=tuple(c._replace(power = c.power._replace(signal= c
                               for c in obj.carriers))
 
 #LAB 4 - EXERCISE 1
-'''
+
 #dati plot
 p_,f_ = [],[]
 ase_,nli_ = [],[]
@@ -35,11 +35,11 @@ for ogg in obj1[1]:
 
 plt.ylabel("[dBm] (power of signals)")
 plt.xlabel("[THz] channels frequency")
-plt.plot(f_,p_,'o')
-plt.plot(f_,ase_,'o')
+plt.plot(f_,p_,'+')
+plt.plot(f_,ase_,'*')
 plt.plot(f_,nli_,'o')
 plt.show()
-'''
+
 
 #LAB 4 - EXERCISE 2
 trans = Transceiver(uid="receiver")
